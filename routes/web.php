@@ -53,6 +53,14 @@ Route::prefix('admin')->group(function () {
             Route::get('/manufacturer/edit/{id}', [admin::class, 'editManufacturer'])->name('admin.manufacturer.edit');
             Route::post('/manufacturer/update/{id}', [admin::class, 'updateManufacturer'])->name('admin.manufacturer.update');
             Route::delete('/manufacturer/delete/{id}', [admin::class, 'deleteManufacturer'])->name('admin.manufacturer.destroy');
+
+             // Retailer
+             Route::get('/retailer', [admin::class, 'showRetailer'])->name('admin.showRetailer');
+             Route::get('/retailer/add', [admin::class, 'addRetailer'])->name('admin.retailer.create');
+             Route::post('/retailer/store', [admin::class, 'storeRetailer'])->name('admin.retailer.store');
+             Route::get('/retailer/edit/{id}', [admin::class, 'editRetailer'])->name('admin.retailer.edit');
+             Route::put('/retailer/update/{id}', [admin::class, 'updateRetailer'])->name('admin.retailer.update');
+             Route::delete('/retailer/delete/{id}', [admin::class, 'deleteRetailer'])->name('admin.retailer.destroy');
         });
     });
 });

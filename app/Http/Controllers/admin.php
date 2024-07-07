@@ -406,4 +406,97 @@ class admin extends Controller
         // Redirect to the category list with a success message
         return redirect()->back()->with('success', 'Manufacturers deleted successfully.');
     }
+
+    // reatiler
+    public function showRetailer()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $retailer = DB::select('SELECT retailers.*, areas.name as area_name FROM retailers JOIN areas ON retailers.area_id = areas.id');
+
+        return view('admin.Retailer', compact('retailer', 'admin'));
+    }
+    // add reatiler
+    public function addRetailer()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $areas = DB::table('areas')->get();
+
+        return view('admin.addRetailer', compact('admin', 'areas'));
+    }
+    // store retailer
+    public function storeRetailer(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|max:50',
+            'area_id' => 'required|integer|exists:areas,id',
+        ]);
+
+        DB::insert('INSERT INTO retailers (name, address, phone, email, password, area_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
+            $request->name,
+            $request->address,
+            $request->phone,
+            $request->email,
+            $request->password,
+            $request->area_id,
+            now(),
+            now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Retailer added successfully.');
+    }
+    // Edit retailer
+    public function editRetailer($id)
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $retailer = DB::table('retailers')->where('id', $id)->first();
+        $areas = DB::table('areas')->get();
+
+        return view('admin.editRetailer', compact('admin', 'retailer', 'areas'));
+    }
+    // update retailer
+    public function updateRetailer($id, Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|max:50',
+            'area_id' => 'required|integer|exists:areas,id',
+        ]);
+
+        // Use raw SQL to update the retailer in the database
+        DB::update('UPDATE retailers SET name = ?, address = ?, phone = ?, email = ?, password = ?, area_id = ?, updated_at = ? WHERE id = ?', [
+            $request->name,
+            $request->address,
+            $request->phone,
+            $request->email,
+            $request->password,
+            $request->area_id,
+            now(),
+            $id,
+        ]);
+
+        return redirect()->back()->with('success', 'Retailer updated successfully.');
+    }
+    // delete retailer
+    public function deleteRetailer($id)
+    {
+        // Use raw SQL to delete the category from the database
+        DB::delete('DELETE FROM retailers WHERE id = ?', [$id]);
+
+        // Redirect to the category list with a success message
+        return redirect()->back()->with('success', 'Retailers deleted successfully.');
+    }
 }
