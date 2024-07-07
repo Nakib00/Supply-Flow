@@ -5,7 +5,7 @@
     {{--  <!-- Page Wrapper -->  --}}
     <div id="wrapper">
 
-       
+
 
         {{--  <!-- Content Wrapper -->  --}}
             @yield('content')
@@ -14,7 +14,7 @@
     </div>
     {{--  <!-- End of Page Wrapper -->  --}}
 
-    //include footer
+
     @include('include.footer')
 
 </body>
