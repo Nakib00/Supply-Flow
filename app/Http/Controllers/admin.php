@@ -227,4 +227,183 @@ class admin extends Controller
         // Redirect to the category list with a success message
         return redirect()->back()->with('success', 'units deleted successfully.');
     }
+
+    // Area show
+    public function showArea()
+    {
+        // Get the admin ID
+        $adminId = auth()->guard('admin')->id();
+
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        // Fetch the areas by ID using raw SQL
+        $area = DB::select('SELECT * FROM areas');
+        return view('admin.area', compact('admin', 'area'));
+    }
+    // add area
+    public function addArea()
+    {
+        // Get the admin ID
+        $adminId = auth()->guard('admin')->id();
+
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        return view('admin.addArea', compact('admin'));
+    }
+    // store area
+    public function storeArea(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'code' => 'required|string|max:255',
+        ]);
+
+        // Use raw SQL to insert the category into the database
+        DB::insert('INSERT INTO areas (name,description,code,created_at, updated_at) VALUES (?, ?, ?,?,?)', [
+            $request->name,
+            $request->description,
+            $request->code,
+            now(),
+            now(),
+        ]);
+
+        // Redirect to the category list with a success message
+        return redirect()->back()->with('success', 'Area added successfully.');
+    }
+    // Edit area
+    public function editArea($id)
+    {
+        $adminId = auth()->guard('admin')->id();
+
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        // Fetch the category by ID using raw SQL
+        $area = DB::select('SELECT * FROM areas WHERE id = ?', [$id]);
+
+        return view('admin.editArea', compact('admin', 'area'));
+    }
+    // update area
+    public function updateArea(Request $request, $id)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'code' => 'required|string|max:255',
+        ]);
+
+        // Use raw SQL to update the category in the database
+        DB::update('UPDATE areas SET name = ?,description=?,code=?, updated_at = ? WHERE id = ?', [
+            $request->name,
+            $request->description,
+            $request->code,
+            now(),
+            $id,
+        ]);
+
+        // Redirect to the category list with a success message
+        return redirect()->back()->with('success', 'Area updated successfully.');
+    }
+    // deleate area
+    public function deleteArea($id)
+    {
+        // Use raw SQL to delete the category from the database
+        DB::delete('DELETE FROM areas WHERE id = ?', [$id]);
+
+        // Redirect to the category list with a success message
+        return redirect()->back()->with('success', 'Area deleted successfully.');
+    }
+
+    // Manufacturar show
+    public function showManufacturer()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        // Fetch the manufacturers by ID using raw SQL
+        $manufacturers = DB::select('SELECT * FROM manufacturers');
+
+        return view('admin.Manufacturer', compact('admin', 'manufacturers'));
+    }
+    // add manufacturer
+    public function addManufacturer()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        return view('admin.addManufacturer', compact('admin'));
+    }
+    // store manufacturer
+    public function storeManufacturer(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|max:50',
+        ]);
+
+        // Use raw SQL to insert the manufacturer into the database
+        DB::insert('INSERT INTO manufacturers (name, address, phone, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)', [
+            $request->name,
+            $request->address,
+            $request->phone,
+            $request->email,
+            $request->password,
+            now(),
+            now(),
+        ]);
+
+        // Redirect to the manufacturer list with a success message
+        return redirect()->back()->with('success', 'Manufacturer added successfully.');
+    }
+    // Edit a manufacturer
+    public function editManufacturer($id)
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $manufacturer = DB::select('SELECT * FROM manufacturers WHERE id = ?', [$id]);
+
+        return view('admin.editManufacturer', compact('admin', 'manufacturer'));
+    }
+    // update a manufacturer
+    public function updateManufacturer($id, Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'passowrd' => 'required|string|max:50',
+        ]);
+
+        // Use raw SQL to update the manufacturers in the database
+        DB::update('UPDATE manufacturers SET name = ?,address=?,phone=?,email=?,password=?, updated_at = ? WHERE id = ?', [
+            $request->name,
+            $request->address,
+            $request->phone,
+            $request->email,
+            $request->passowrd,
+            now(),
+            $id,
+        ]);
+
+        // Redirect to the category list with a success message
+        return redirect()->back()->with('success', 'Manufacturer updated successfully.');
+    }
+    // delete the manufacturer
+    public function deleteManufacturer($id)
+    {
+        // Use raw SQL to delete the category from the database
+        DB::delete('DELETE FROM manufacturers WHERE id = ?', [$id]);
+
+        // Redirect to the category list with a success message
+        return redirect()->back()->with('success', 'Manufacturers deleted successfully.');
+    }
 }

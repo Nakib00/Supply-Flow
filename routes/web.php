@@ -37,6 +37,22 @@ Route::prefix('admin')->group(function () {
             Route::get('/unit/edit/{id}', [admin::class, 'editUnit'])->name('admin.unit.edit');
             Route::post('/unit/update/{id}', [admin::class, 'updateUnit'])->name('admin.unit.update');
             Route::delete('/unit/delete/{id}', [admin::class, 'deleteUnit'])->name('admin.unit.destroy');
+
+            // area
+            Route::get('/area', [admin::class, 'showArea'])->name('admin.showArea');
+            Route::get('/area/add', [admin::class, 'addArea'])->name('admin.area.create');
+            Route::post('/area/store', [admin::class, 'storeArea'])->name('admin.area.store');
+            Route::get('/area/edit/{id}', [admin::class, 'editArea'])->name('admin.area.edit');
+            Route::post('/area/update/{id}', [admin::class, 'updateArea'])->name('admin.area.update');
+            Route::delete('/area/delete/{id}', [admin::class, 'deleteArea'])->name('admin.area.destroy');
+
+            // Manufacturer
+            Route::get('/manufacturer', [admin::class, 'showManufacturer'])->name('admin.showManufacturer');
+            Route::get('/manufacturer/add', [admin::class, 'addManufacturer'])->name('admin.manufacturer.create');
+            Route::post('/manufacturer/store', [admin::class, 'storeManufacturer'])->name('admin.manufacturer.store');
+            Route::get('/manufacturer/edit/{id}', [admin::class, 'editManufacturer'])->name('admin.manufacturer.edit');
+            Route::post('/manufacturer/update/{id}', [admin::class, 'updateManufacturer'])->name('admin.manufacturer.update');
+            Route::delete('/manufacturer/delete/{id}', [admin::class, 'deleteManufacturer'])->name('admin.manufacturer.destroy');
         });
     });
 });

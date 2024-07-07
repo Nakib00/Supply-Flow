@@ -13,12 +13,13 @@
                         required>
                 </div>
                 <div class="form-group">
-                <label for="name">Description</label>
-                <input type="text" class="form-control" id="name" name="description"
-                    placeholder="Enter unit Description" required>
+                    <label for="name">Description</label>
+                    <input type="text" class="form-control" id="name" name="description"
+                        placeholder="Enter unit Description" required>
+
+                </div>
+                <button type="submit" class="btn btn-primary">Add Unit</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Add Unit</button>
-        </form>
-    </div>
     </div>
 @endsection
