@@ -77,6 +77,11 @@ Route::prefix('admin')->group(function () {
             Route::get('/Distributer/edit/{id}', [admin::class, 'editDistributer'])->name('admin.distributer.edit');
             Route::put('/Distributer/update/{id}', [admin::class, 'updateDistributer'])->name('admin.distributer.update');
             Route::delete('/Distributer/delete/{id}', [admin::class, 'deleteDistributer'])->name('admin.distributer.destroy');
+
+            // Order
+            Route::get('/Order', [admin::class, 'showOrder'])->name('admin.showOrder');
+            Route::get('/Order/add', [admin::class, 'addOrder'])->name('admin.order.create');
+            Route::post('/Order/store', [admin::class, 'storeOrder'])->name('admin.order.store');
         });
     });
 });

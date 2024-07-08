@@ -709,4 +709,61 @@ class admin extends Controller
         // Redirect to the distributor list with a success message
         return redirect()->back()->with('success', 'Distributor deleted successfully.');
     }
+
+    // Order
+    public function showOrder()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $orders = DB::table('orders')
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->join('manufacturers', 'orders.manufacturer_id', '=', 'manufacturers.id')
+            ->select('orders.*', 'products.name as product_name', 'manufacturers.name as manufacturer_name')
+            ->get();
+
+        return view('admin.Order', compact('admin', 'orders'));
+    }
+    // add order
+    public function addOrder()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $products = DB::table('products')->get();
+        $manufacturers = DB::table('manufacturers')->get();
+        return view('admin.addOrder', compact('admin', 'products', 'manufacturers'));
+    }
+    // store order
+    public function storeOrder(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'manufacturer_id' => 'required|exists:manufacturers,id',
+            'quantity' => 'required|integer',
+            'total' => 'required|numeric',
+            'quarry' => 'nullable|string',
+            'status' => 'required|integer',
+        ]);
+
+        // Calculate tax based on total price
+        $product = DB::table('products')->where('id', $request->product_id)->first();
+        $total = $product->price * $request->quantity;
+        $tax = $total * 0.09;
+
+        // Insert order into database
+        DB::table('orders')->insert([
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'total' => $request->total,
+            'question' => $request->quarry,
+            'status' => $request->status,
+            'tax' => $tax,
+            'manufacturer_id' => $request->manufacturer_id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Order added successfully.');
+    }
 }

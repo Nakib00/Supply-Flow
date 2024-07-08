@@ -22,7 +22,7 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="{{ route('admin.showOrder') }}">
             <span>Orders</span></a>
     </li>
     <li class="nav-item">
