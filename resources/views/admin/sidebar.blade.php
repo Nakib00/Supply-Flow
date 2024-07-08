@@ -26,7 +26,7 @@
             <span>Orders</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="{{ route('admin.showProduct') }}">
             <span>Products</span></a>
     </li>
     <li class="nav-item">
@@ -38,7 +38,7 @@
             <span>Manufacturers</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ route('admin.showDistributer') }}">
             <span>Distributors</span></a>
     </li>
 

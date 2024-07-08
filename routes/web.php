@@ -54,13 +54,29 @@ Route::prefix('admin')->group(function () {
             Route::post('/manufacturer/update/{id}', [admin::class, 'updateManufacturer'])->name('admin.manufacturer.update');
             Route::delete('/manufacturer/delete/{id}', [admin::class, 'deleteManufacturer'])->name('admin.manufacturer.destroy');
 
-             // Retailer
-             Route::get('/retailer', [admin::class, 'showRetailer'])->name('admin.showRetailer');
-             Route::get('/retailer/add', [admin::class, 'addRetailer'])->name('admin.retailer.create');
-             Route::post('/retailer/store', [admin::class, 'storeRetailer'])->name('admin.retailer.store');
-             Route::get('/retailer/edit/{id}', [admin::class, 'editRetailer'])->name('admin.retailer.edit');
-             Route::put('/retailer/update/{id}', [admin::class, 'updateRetailer'])->name('admin.retailer.update');
-             Route::delete('/retailer/delete/{id}', [admin::class, 'deleteRetailer'])->name('admin.retailer.destroy');
+            // Retailer
+            Route::get('/retailer', [admin::class, 'showRetailer'])->name('admin.showRetailer');
+            Route::get('/retailer/add', [admin::class, 'addRetailer'])->name('admin.retailer.create');
+            Route::post('/retailer/store', [admin::class, 'storeRetailer'])->name('admin.retailer.store');
+            Route::get('/retailer/edit/{id}', [admin::class, 'editRetailer'])->name('admin.retailer.edit');
+            Route::put('/retailer/update/{id}', [admin::class, 'updateRetailer'])->name('admin.retailer.update');
+            Route::delete('/retailer/delete/{id}', [admin::class, 'deleteRetailer'])->name('admin.retailer.destroy');
+
+            // Product
+            Route::get('/product', [admin::class, 'showProduct'])->name('admin.showProduct');
+            Route::get('/product/add', [admin::class, 'addProduct'])->name('admin.Product.create');
+            Route::post('/product/store', [admin::class, 'storeProduct'])->name('admin.Product.store');
+            Route::get('/product/edit/{id}', [admin::class, 'editProduct'])->name('admin.Product.edit');
+            Route::put('/product/update/{id}', [admin::class, 'updateProduct'])->name('admin.Product.update');
+            Route::delete('/product/delete/{id}', [admin::class, 'deleteProduct'])->name('admin.Product.destroy');
+
+            // Distributer
+            Route::get('/Distributer', [admin::class, 'showDistributer'])->name('admin.showDistributer');
+            Route::get('/Distributer/add', [admin::class, 'addDistributer'])->name('admin.distributer.create');
+            Route::post('/Distributer/store', [admin::class, 'storeDistributer'])->name('admin.distributer.store');
+            Route::get('/Distributer/edit/{id}', [admin::class, 'editDistributer'])->name('admin.distributer.edit');
+            Route::put('/Distributer/update/{id}', [admin::class, 'updateDistributer'])->name('admin.distributer.update');
+            Route::delete('/Distributer/delete/{id}', [admin::class, 'deleteDistributer'])->name('admin.distributer.destroy');
         });
     });
 });
