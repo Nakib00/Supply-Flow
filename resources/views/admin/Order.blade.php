@@ -1,11 +1,13 @@
 @extends('admin.adminD')
+
 @section('admin')
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary">Order List</h6>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                <a href="#" id="generateReportBtn" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                </a>
                 <a href="{{ route('admin.order.create') }}" class="btn btn-primary">Add Order</a>
             </div>
         </div>
@@ -50,4 +52,22 @@
             </div>
         </div>
     </div>
+
+    {{--  <!-- Optional: Include xlsx library -->  --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('generateReportBtn').addEventListener('click', function() {
+                // Get table element
+                var table = document.getElementById('dataTable');
+                // Convert table to Excel sheet
+                var wb = XLSX.utils.table_to_book(table, {
+                    sheet: "Order Report"
+                });
+                // Generate and download the Excel file
+                XLSX.writeFile(wb, 'order_report.xlsx');
+            });
+        });
+    </script>
 @endsection

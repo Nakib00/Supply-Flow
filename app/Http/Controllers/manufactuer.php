@@ -48,8 +48,19 @@ class manufactuer extends Controller
         $manufacturerId = auth()->guard('manufacturer')->id();
         $manufacturer = DB::select('select * from manufacturers where id = ?', [$manufacturerId]);
 
+        // Use raw SQL to calculate the sum of 'total' for orders related to this manufacturer
+        $totalSum = DB::table('orders')
+            ->where('manufacturer_id', $manufacturerId)
+            ->where('status', '3')
+            ->sum('total');
 
-        return view('manufacturer.home', compact('manufacturer'));
+        $totalOrder = DB::table('orders')
+            ->where('manufacturer_id', $manufacturerId)
+            ->where('status', '0')
+            ->sum('id');
+
+
+        return view('manufacturer.home', compact('manufacturer', 'totalSum', 'totalOrder'));
     }
     // Admin logout
     public function manufactuerlogout()

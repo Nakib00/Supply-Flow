@@ -48,15 +48,28 @@ class retailer extends Controller
         $retailerId = auth()->guard('retailer')->id();
         $retailer = DB::select('select * from retailers where id = ?', [$retailerId]);
 
+        $totalSum = DB::table('sells')
+            ->where('retailer_id', $retailerId)
+            ->sum('total');
 
-        return view('retailer.home', compact('retailer'));
+        $duePayment = DB::table('sells')
+            ->where('retailer_id', $retailerId)
+            ->where('status', '0')
+            ->sum('total');
+
+        $payedPayment = DB::table('sells')
+            ->where('retailer_id', $retailerId)
+            ->where('status', '1')
+            ->sum('total');
+
+        return view('retailer.home', compact('retailer', 'totalSum', 'duePayment','payedPayment'));
     }
     // Admin logout
     public function retailerlogout()
     {
         Auth::guard('retailer')->logout();
 
-        return redirect()->route('login_manufactuer')->with('success', 'Retailer logout successful');
+        return redirect()->route('login_retailer')->with('success', 'Retailer logout successful');
     }
 
     // profile
@@ -202,7 +215,7 @@ class retailer extends Controller
                 'cvv' => $cvv,
                 'mobile_number' => $mobile_number,
                 'Transaction_ID' => $transaction_id,
-                'status' => '1', 
+                'status' => '1',
                 'updated_at' => now(),
             ]);
 

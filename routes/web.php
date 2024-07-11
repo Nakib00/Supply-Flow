@@ -3,7 +3,6 @@
 use App\Http\Controllers\admin;
 use App\Http\Controllers\manufactuer;
 use App\Http\Controllers\retailer;
-use App\Http\Controllers\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
 
 
