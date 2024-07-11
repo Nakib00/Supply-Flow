@@ -766,4 +766,165 @@ class admin extends Controller
 
         return redirect()->back()->with('success', 'Order added successfully.');
     }
+
+    // Quantity
+    public function quality()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $orders = DB::table('orders')
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->join('manufacturers', 'orders.manufacturer_id', '=', 'manufacturers.id')
+            ->select('orders.*', 'products.name as product_name', 'manufacturers.name as manufacturer_name')
+            ->where('orders.status', 3)
+            ->get();
+
+        return view('admin.Quality', compact('admin', 'orders'));
+    }
+    // show complain
+    public function showComplaintForm($orderId)
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $order = DB::table('orders')
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->select('orders.id', 'products.name as product_name', 'orders.quantity', 'orders.product_id', 'orders.manufacturer_id')
+            ->where('orders.id', $orderId)
+            ->first();
+
+        return view('admin.Complain', compact('order', 'admin'));
+    }
+    // submit complain
+    public function submitComplaint(Request $request, $orderId)
+    {
+        $request->validate([
+            'quantity' => 'required|integer',
+            'complain' => 'required|string|max:255',
+        ]);
+
+        DB::table('complains')->insert([
+            'order_id' => $orderId,
+            'quantity' => $request->input('quantity'),
+            'product_id' => $request->input('product_id'),
+            'manufacturer_id' => $request->input('manufacturer_id'),
+            'complain' => $request->input('complain'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Complaint submitted successfully');
+    }
+
+    // show complain details
+    public function showComplainDetails($orderId)
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $complain = DB::table('complains')
+            ->where('order_id', $orderId)
+            ->first();
+
+        if (!$complain) {
+            return redirect()->back()->with('error', 'Complaint not found.');
+        }
+
+        // Fetch product name
+        $productName = DB::table('products')
+            ->where('id', $complain->product_id)
+            ->value('name');
+
+        return view('admin.ShowComplain', compact('complain', 'admin', 'productName'));
+    }
+
+    // admin profile
+    public function showProfile()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+
+        return view('admin.AdminProfile', compact('admin'));
+    }
+    // update profile
+    public function updateProfile(Request $request)
+    {
+        $adminId = auth()->guard('admin')->id();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:admins,email,' . $adminId,
+        ]);
+
+        $name = $request->input('name');
+        $email = $request->input('email');
+
+        // Update profile information
+        DB::table('admins')
+            ->where('id', $adminId)
+            ->update([
+                'name' => $name,
+                'email' => $email,
+                'updated_at' => now(),
+            ]);
+
+        return redirect()->back()->with('success', 'Profile updated successfully');
+    }
+
+    // sells
+    public function showSell()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $sales = DB::select('
+        SELECT
+            sells.id,
+            products.name AS product,
+            sells.quantity,
+            sells.total,
+            retailers.name AS retailer_name,
+            sells.status,
+            sells.created_at AS sale_date,
+            sells.updated_at AS paid_date
+        FROM
+            sells
+        JOIN
+            products ON sells.product_id = products.id
+        JOIN
+            retailers ON sells.retailer_id = retailers.id
+    ');
+
+        return view('admin.Sall', compact('admin', 'sales'));
+    }
+    // sells form
+    public function SellCreate()
+    {
+        $adminId = auth()->guard('admin')->id();
+        $admin = DB::select('select * from admins where id = ?', [$adminId]);
+
+        $products = DB::select('SELECT id, name FROM products');
+        $retailers = DB::select('SELECT id, name FROM retailers');
+
+        return view('admin.addSell', compact('admin', 'products', 'retailers'));
+    }
+    // store sells
+    public function store(Request $request)
+    {
+        $product_id = $request->input('product_id');
+        $quantity = $request->input('quantity');
+        $retailer_id = $request->input('retailer_id');
+
+        // Fetch product price
+        $product = DB::select('SELECT price FROM products WHERE id = ?', [$product_id]);
+        $total = $product[0]->price * $quantity;
+
+        $status = 0;
+
+        DB::insert('INSERT INTO sells (product_id, quantity, total, retailer_id, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())', [$product_id, $quantity, $total, $retailer_id, $status]);
+
+        return redirect()->back()->with('success', 'Sale added successfully');
+    }
 }

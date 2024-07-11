@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin;
 use App\Http\Controllers\manufactuer;
 use App\Http\Controllers\retailer;
+use App\Http\Controllers\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -11,6 +12,9 @@ Route::get('/', function () {
     return view('login');
 });
 
+Route::get('/hi', function () {
+    return view('exampleHosted');
+});
 // Admin routes
 Route::prefix('admin')->group(function () {
     // login routes
@@ -82,6 +86,21 @@ Route::prefix('admin')->group(function () {
             Route::get('/Order', [admin::class, 'showOrder'])->name('admin.showOrder');
             Route::get('/Order/add', [admin::class, 'addOrder'])->name('admin.order.create');
             Route::post('/Order/store', [admin::class, 'storeOrder'])->name('admin.order.store');
+
+            // Quality Control
+            Route::get('/quality', [admin::class, 'quality'])->name('admin.quality');
+            Route::get('/orders/{order}', [admin::class, 'showComplaintForm'])->name('admin.orders.complain');
+            Route::post('/orders/{order}/complain', [admin::class, 'submitComplaint'])->name('orders.submitComplaint');
+            Route::get('/orders/{order}/complain', [admin::class, 'showComplainDetails'])->name('orders.complainDetails');
+
+            // admin profile
+            Route::get('/admin/profile', [admin::class, 'showProfile'])->name('admin.profile');
+            Route::post('/admin/profile/update', [admin::class, 'updateProfile'])->name('admin.profile.update');
+
+            // sell
+            Route::get('/admin/sell', [admin::class, 'showSell'])->name('admin.sell');
+            Route::get('/admin/sell/create', [admin::class, 'SellCreate'])->name('admin.sale.create');
+            Route::post('admin/sales/store', [admin::class, 'store'])->name('admin.sales.store');
         });
     });
 });
@@ -96,6 +115,18 @@ Route::prefix('manufacturer')->group(function () {
     // Dashboard routes with middleware
     Route::middleware('manufacturer')->group(function () {
         Route::get('/dashboard', [manufactuer::class, 'manufactuerdashboard'])->name('manufactuer.dashboard');
+
+        // sells
+        Route::get('/sell', [manufactuer::class, 'sells'])->name('manufactuer.sell.show');
+        Route::post('/manufacturer/update-order-status', [manufactuer::class, 'updateOrderStatus'])->name('manufacturer.updateOrderStatus');
+
+        // Complain
+        Route::get('/complain', [manufactuer::class, 'showComplain'])->name('manufacturer.orders.complain');
+        Route::post('/complain/update-status', [manufactuer::class, 'updateComplainStatus'])->name('complain.update-status');
+
+        // Manufacturer profile
+        Route::get('/profile', [manufactuer::class, 'showProfile'])->name('manufacturer.profile');
+        Route::post('/profile/update', [manufactuer::class, 'updateProfile'])->name('manufacturer.profile.update');
     });
 });
 
@@ -109,5 +140,18 @@ Route::prefix('retailer')->group(function () {
     // Dashboard routes with middleware
     Route::middleware('retailer')->group(function () {
         Route::get('/dashboard', [retailer::class, 'retailerdashboard'])->name('retailer.dashboard');
+
+        // Retailer profile
+        Route::get('/profile', [retailer::class, 'showProfile'])->name('retailer.profile');
+        Route::post('/profile/update', [retailer::class, 'updateProfile'])->name('retailer.profile.update');
+
+        // orders
+        Route::get('/order', [retailer::class, 'showOrder'])->name('retailer.order');
+
+        // checkout
+        Route::get('retailer/checkout/{order}', [retailer::class, 'showCheckout'])->name('retailer.checkout');
+        Route::post('retailer/pay', [retailer::class, 'processPayment'])->name('retailer.pay');
     });
 });
+
+

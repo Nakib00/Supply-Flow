@@ -26,6 +26,14 @@
             <span>Orders</span></a>
     </li>
     <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.sell') }}">
+            <span>Sells</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.quality') }}">
+            <span>Quality Control</span></a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="{{ route('admin.showProduct') }}">
             <span>Products</span></a>
     </li>

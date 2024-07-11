@@ -1,10 +1,10 @@
 @extends('admin.adminD')
+
 @section('admin')
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-primary">Order List</h6>
-                <a href="{{ route('admin.order.create') }}" class="btn btn-primary">Add Order</a>
+                <h6 class="m-0 font-weight-bold text-primary">Quality Check</h6>
             </div>
         </div>
         <div class="card-body">
@@ -16,29 +16,33 @@
                             <th>Product Name</th>
                             <th>Quantity</th>
                             <th>Total Price</th>
-                            <th>Tax</th>
                             <th>Manufacturer</th>
-                            <th>Order Date</th>
-                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $order->id }}</td>
-                                <td>{{ $order->product_name }}</td>
+                                <td><a
+                                        href="{{ route('admin.orders.complain', $order->id) }}">{{ $order->product_name }}</a>
+                                </td>
                                 <td>{{ $order->quantity }}</td>
                                 <td>{{ $order->total }}</td>
-                                <td>{{ $order->tax }}</td>
                                 <td>{{ $order->manufacturer_name }}</td>
-                                <td>{{ $order->created_at }}</td>
+
                                 <td>
-                                    @if ($order->status == 0)
-                                        <span class="badge badge-warning">Not Approved</span>
-                                    @elseif ($order->status == 1)
-                                        <span class="badge badge-success">Approved</span>
+                                    @php
+                                        $complainExists = DB::table('complains')
+                                            ->where('order_id', $order->id)
+                                            ->exists();
+                                    @endphp
+
+                                    @if ($complainExists)
+                                        <a href="{{ route('orders.complainDetails', $order->id) }}"
+                                            class="btn btn-sm btn-info">View Complain</a>
                                     @else
-                                        <span class="badge badge-success">Delivered</span>
+                                        <button class="btn btn-sm btn-secondary" disabled>Not Applied Yet</button>
                                     @endif
                                 </td>
                             </tr>
