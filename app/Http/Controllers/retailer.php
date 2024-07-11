@@ -202,7 +202,7 @@ class retailer extends Controller
                 'cvv' => $cvv,
                 'mobile_number' => $mobile_number,
                 'Transaction_ID' => $transaction_id,
-                'status' => '1', // Assuming 1 represents 'Paid'
+                'status' => '1', 
                 'updated_at' => now(),
             ]);
 

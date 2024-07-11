@@ -887,6 +887,12 @@ class admin extends Controller
             sells.total,
             retailers.name AS retailer_name,
             sells.status,
+            sells.payment_type,
+            sells.card_number,
+            sells.expiration_date,
+            sells.cvv,
+            sells.mobile_number,
+            sells.Transaction_ID,
             sells.created_at AS sale_date,
             sells.updated_at AS paid_date
         FROM
@@ -899,6 +905,7 @@ class admin extends Controller
 
         return view('admin.Sall', compact('admin', 'sales'));
     }
+
     // sells form
     public function SellCreate()
     {

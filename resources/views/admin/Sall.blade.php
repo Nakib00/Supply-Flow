@@ -34,7 +34,48 @@
                                     @if ($sale->status == 0)
                                         <span class="badge badge-warning">Not Paid</span>
                                     @elseif ($sale->status == 1)
-                                        <span class="badge badge-success">Paid</span>
+                                        <span class="badge badge-success" data-toggle="modal"
+                                            data-target="#paymentModal{{ $sale->id }}">Paid</span>
+                                        <!-- Payment Modal -->
+                                        <div class="modal fade" id="paymentModal{{ $sale->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="paymentModalLabel{{ $sale->id }}"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="paymentModalLabel{{ $sale->id }}">
+                                                            Payment Information</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Display payment information -->
+                                                        @if ($sale->payment_type == 1 || $sale->payment_type == 2)
+                                                            <p><strong>Payment Type:</strong>
+                                                                {{ $sale->payment_type == 1 ? 'Credit Card' : 'Debit Card' }}
+                                                            </p>
+                                                            <p><strong>Card Number:</strong> {{ $sale->card_number }}</p>
+                                                            <p><strong>Expiration Date:</strong>
+                                                                {{ $sale->expiration_date }}</p>
+                                                            <p><strong>CVV:</strong> {{ $sale->cvv }}</p>
+                                                        @elseif ($sale->payment_type == 4 || $sale->payment_type == 5)
+                                                            <p><strong>Payment Type:</strong>
+                                                                {{ $sale->payment_type == 4 ? 'Bkash' : 'Nagad' }}</p>
+                                                            <p><strong>Mobile Number:</strong> {{ $sale->mobile_number }}
+                                                            </p>
+                                                            <p><strong>Transaction ID:</strong> {{ $sale->Transaction_ID }}
+                                                            </p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 </td>
                                 <td>{{ $sale->sale_date }}</td>
