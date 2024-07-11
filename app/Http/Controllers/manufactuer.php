@@ -79,6 +79,29 @@ class manufactuer extends Controller
         $orderId = $request->input('order_id');
         $status = $request->input('status');
 
+
+        $order = DB::table('orders')
+            ->select('id', 'product_id', 'quantity')
+            ->where('id', $orderId)
+            ->first();
+
+        if ($order) {
+            if ($status == '3') {
+                $productQuantity = DB::table('products')
+                    ->select('id', 'quantity')
+                    ->where('id', $order->product_id)
+                    ->first();
+
+                if ($productQuantity) {
+                    $newQuantity = $productQuantity->quantity + $order->quantity;
+
+                    DB::table('products')
+                        ->where('id', $order->product_id)
+                        ->update(['quantity' => $newQuantity]);
+                }
+            }
+        }
+
         $updated = DB::table('orders')
             ->where('id', $orderId)
             ->update(['status' => $status]);
@@ -134,6 +157,23 @@ class manufactuer extends Controller
             if ($order) {
                 // Calculate new quantity
                 $newQuantity = $order->quantity - $complain->quantity;
+
+                $orderProduct = DB::table('orders')
+                    ->select('id', 'product_id', 'quantity')
+                    ->where('id', $orderId)
+                    ->first();
+                $productQuantity = DB::table('products')
+                    ->select('id', 'quantity')
+                    ->where('id', $orderProduct->product_id)
+                    ->first();
+
+                if ($productQuantity) {
+                    $ProductQuantity = $productQuantity->quantity - $complain->quantity;
+
+                    DB::table('products')
+                        ->where('id', $order->product_id)
+                        ->update(['quantity' => $ProductQuantity]);
+                }
 
                 // Update order table with new quantity
                 DB::table('orders')

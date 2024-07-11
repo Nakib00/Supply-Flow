@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\PD;
 
 class admin extends Controller
 {
@@ -50,9 +51,18 @@ class admin extends Controller
 
         $admin = DB::select('select * from admins where id = ?', [$adminId]);
 
+        // Calculate sum of total orders
+        $totalOrders = DB::table('orders')->sum('total');
 
-        return view('admin.home', compact('admin'));
+        $totalEarnings = DB::table('sells')->where('status', 1)->sum('total');
+
+        $totalProduct = DB::table('products')->sum('id');
+
+        $totalManufacturer = DB::table('manufacturers')->sum('id');
+
+        return view('admin.home', compact('admin', 'totalOrders', 'totalEarnings', 'totalProduct', 'totalManufacturer'));
     }
+
     // Admin logout
     public function adminlogout()
     {

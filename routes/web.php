@@ -26,6 +26,7 @@ Route::prefix('admin')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::prefix('/dashboard')->group(function () {
             Route::get('/', [admin::class, 'admindashboard'])->name('admin.dashboard');
+
             // Category
             Route::get('/category', [admin::class, 'showCategory'])->name('admin.showCategory');
             Route::get('/category/add', [admin::class, 'addCategory'])->name('admin.categories.create');
