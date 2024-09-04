@@ -5,8 +5,6 @@ use App\Http\Controllers\manufactuer;
 use App\Http\Controllers\retailer;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::get('/', function () {
     return view('login');
 });
