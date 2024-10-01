@@ -56,9 +56,9 @@ class admin extends Controller
 
         $totalEarnings = DB::table('sells')->where('status', 1)->sum('total');
 
-        $totalProduct = DB::table('products')->sum('id');
+        $totalProduct = DB::table('products')->count();
 
-        $totalManufacturer = DB::table('manufacturers')->sum('id');
+        $totalManufacturer = DB::table('manufacturers')->count();
 
         return view('admin.home', compact('admin', 'totalOrders', 'totalEarnings', 'totalProduct', 'totalManufacturer'));
     }
@@ -934,13 +934,28 @@ class admin extends Controller
         $quantity = $request->input('quantity');
         $retailer_id = $request->input('retailer_id');
 
-        // Fetch product price
-        $product = DB::select('SELECT price FROM products WHERE id = ?', [$product_id]);
-        $total = $product[0]->price * $quantity;
+        // Fetch product details
+        $product = DB::select('SELECT price, quantity FROM products WHERE id = ?', [$product_id]);
 
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
+        }
+
+        $available_quantity = $product[0]->quantity;
+
+        // Check if the requested quantity is greater than available quantity
+        if ($quantity > $available_quantity) {
+            return redirect()->back()->with('error', 'Insufficient product quantity available.');
+        }
+
+        $total = $product[0]->price * $quantity;
         $status = 0;
 
+        // Insert sale record
         DB::insert('INSERT INTO sells (product_id, quantity, total, retailer_id, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())', [$product_id, $quantity, $total, $retailer_id, $status]);
+
+        // Optionally update the product quantity in the database after the sale
+        DB::update('UPDATE products SET quantity = quantity - ? WHERE id = ?', [$quantity, $product_id]);
 
         return redirect()->back()->with('success', 'Sale added successfully');
     }
