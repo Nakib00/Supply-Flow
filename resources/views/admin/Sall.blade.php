@@ -90,21 +90,41 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 
     {{--  <!-- Optional: Include xlsx library -->  --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('generateReportBtn').addEventListener('click', function() {
-                // Get table element
-                var table = document.getElementById('dataTable');
-                // Convert table to Excel sheet
-                var wb = XLSX.utils.table_to_book(table, {
-                    sheet: "Sales Report"
+                // Import jsPDF
+                const {
+                    jsPDF
+                } = window.jspdf;
+
+                // Create a new instance of jsPDF
+                const doc = new jsPDF();
+
+                // Get the table data from the DOM
+                const table = document.getElementById('dataTable');
+
+                // Convert the table into a PDF using autoTable
+                doc.autoTable({
+                    html: table, // Use the HTML table directly
+                    theme: 'grid', // Optional, style the table with grid theme
+                    headStyles: {
+                        fillColor: [0, 123, 255]
+                    }, // Customize header color to match your design
+                    margin: {
+                        top: 20
+                    }, // Add margin at the top
+                    styles: {
+                        fontSize: 10, // Adjust font size to fit content
+                    }
                 });
-                // Generate and download the Excel file
-                XLSX.writeFile(wb, 'sales_report.xlsx');
+
+                // Save the PDF
+                doc.save('sales_report.pdf');
             });
         });
     </script>
