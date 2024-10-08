@@ -24,7 +24,7 @@
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
-                                <td>{{ $product->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td><img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="50"></td>
                                 <td>{{ $product->price }}</td>

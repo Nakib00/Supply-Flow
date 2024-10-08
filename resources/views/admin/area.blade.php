@@ -22,7 +22,7 @@
                     <tbody>
                         @foreach ($area as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>{{ $item->code }}</td>

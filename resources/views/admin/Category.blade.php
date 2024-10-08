@@ -20,7 +20,7 @@
                     <tbody>
                         @foreach ($catagory as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>
                                     <a href="{{ route('admin.categories.edit', $item->id) }}"
