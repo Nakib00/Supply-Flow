@@ -5,7 +5,7 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary mb-4">Orders List</h6>
             <a href="#" id="generateReportBtn" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                <i class="fas fa-download fa-sm text-white-50"></i> Generate PDF Report
             </a>
         </div>
         <div class="card-body">
@@ -43,20 +43,33 @@
         </div>
     </div>
 
-    {{--  <!-- Optional: Include xlsx library -->  --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    {{-- Include jsPDF and autoTable --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Generate Report button functionality
             document.getElementById('generateReportBtn').addEventListener('click', function() {
-                // Get table element
-                var table = document.getElementById('dataTable');
-                // Convert table to Excel sheet
-                var wb = XLSX.utils.table_to_book(table, {
-                    sheet: "Orders Report"
+                const {
+                    jsPDF
+                } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Use autoTable to add the table to the PDF
+                doc.autoTable({
+                    html: '#dataTable', // Get the HTML table element
+                    theme: 'grid', // Use grid style for the table
+                    headStyles: {
+                        fillColor: [22, 160, 133]
+                    }, // Customize header color
+                    margin: {
+                        top: 10
+                    } // Set top margin
                 });
-                // Generate and download the Excel file
-                XLSX.writeFile(wb, 'orders_report.xlsx');
+
+                // Save the PDF with a custom filename
+                doc.save('orders_report.pdf');
             });
         });
     </script>
