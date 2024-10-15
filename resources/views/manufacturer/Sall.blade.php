@@ -6,7 +6,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary">Orders List</h6>
                 <a href="#" id="generateReportBtn" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                    <i class="fas fa-download fa-sm text-white-50"></i> Generate PDF Report
                 </a>
             </div>
         </div>
@@ -45,12 +45,9 @@
                                 </td>
                                 <td>
                                     <select class="form-control status-dropdown" data-order-id="{{ $order->order_id }}">
-                                        <option value="0" {{ $order->status == 0 ? 'selected' : '' }}>Not Approved
-                                        </option>
-                                        <option value="1" {{ $order->status == 1 ? 'selected' : '' }}>Approved
-                                        </option>
-                                        <option value="3" {{ $order->status == 3 ? 'selected' : '' }}>Delivered
-                                        </option>
+                                        <option value="0" {{ $order->status == 0 ? 'selected' : '' }}>Not Approved</option>
+                                        <option value="1" {{ $order->status == 1 ? 'selected' : '' }}>Approved</option>
+                                        <option value="3" {{ $order->status == 3 ? 'selected' : '' }}>Delivered</option>
                                     </select>
                                 </td>
                             </tr>
@@ -61,21 +58,25 @@
         </div>
     </div>
 
-    {{--  <!-- Optional: Include xlsx library -->  --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    {{-- Include jsPDF and autoTable --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Generate Report button functionality
             document.getElementById('generateReportBtn').addEventListener('click', function() {
-                // Get table element
-                var table = document.getElementById('dataTable');
-                // Convert table to Excel sheet
-                var wb = XLSX.utils.table_to_book(table, {
-                    sheet: "Orders Report"
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.autoTable({
+                    html: '#dataTable',  // Use the table element
+                    theme: 'grid',       // Optional styling for table
+                    headStyles: { fillColor: [22, 160, 133] },  // Custom header color
+                    margin: { top: 10 }  // Margin from top
                 });
-                // Generate and download the Excel file
-                XLSX.writeFile(wb, 'orders_report.xlsx');
+
+                doc.save('orders_report.pdf');  // Save the PDF file
             });
 
             // Status dropdowns functionality
